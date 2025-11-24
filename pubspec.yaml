@@ -1,0 +1,41 @@
+name: flutter_application_5
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.9.2
+
+dependencies:
+  convert: ^3.1.2
+  crypto: ^3.0.7
+  device_info_plus: ^12.2.0
+  dio: ^5.9.0
+  flutter:
+    sdk: flutter
+  flutter_dotenv: ^6.0.0
+  flutter_riverpod: ^3.0.3
+  flutter_secure_storage: ^4.2.1
+  go_router: ^17.0.0
+  json_annotation: ^4.9.0
+  lottie: ^3.3.2
+  package_info_plus: ^9.0.0
+  pointycastle: ^4.0.0
+  riverpod_annotation: ^3.0.3
+  shared_preferences: ^2.5.3
+  uuid: ^4.5.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  build_runner: ^2.7.1
+  json_serializable: ^6.11.1
+  riverpod_generator: ^3.0.3
+
+flutter:
+  uses-material-design: true
+  assets:
+  - .env
+  - assets/images/
+  - assets/animations/
