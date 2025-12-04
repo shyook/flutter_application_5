@@ -15,6 +15,12 @@ class AccountbookController extends _$AccountbookController {
     return _repository.fetchServerTime();
   }
 
+  /// 데이터 갱신이 필요한경우 예제.
+  Future<void> refresh() async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() => _repository.fetchServerTime());
+  }
+
   // Future<void> createArticle(ArticleModel article) async {
   //   await _repository.createArticle(article);
   // }

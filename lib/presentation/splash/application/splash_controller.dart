@@ -1,5 +1,6 @@
 // Controller(Notifier)는 "화면 상태 관리 역할"
 import 'package:flutter_application_5/common/utils/cache_helper.dart';
+import 'package:flutter_application_5/presentation/splash/application/splash_model.dart';
 import 'package:flutter_application_5/presentation/splash/application/splash_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -8,6 +9,8 @@ part 'splash_controller.g.dart';
 @Riverpod(keepAlive: true)
 class SplashController extends _$SplashController {
   SplashRepository get _repository => ref.read(splashRepositoryProvider);
+
+  SessionAuth? sessionAuthDetailInfo;
 
   @override
   Future<void> build() async {
@@ -35,6 +38,7 @@ class SplashController extends _$SplashController {
 
       final sessionAuthInfo = sessionAuth.finance?.body?.detail;
       CacheHelper.setSessionAuth(sessionAuthInfo);
+      sessionAuthDetailInfo = sessionAuthInfo;
 
       state = const AsyncData(null); // ✅ 성공 상태
     } catch (e, st) {

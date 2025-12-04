@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_5/common/provider/dio_provider.dart';
+import 'package:flutter_application_5/common/utils/cache_helper.dart';
 import 'package:flutter_application_5/presentation/splash/application/splash_controller.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -41,7 +43,23 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
         data: (_) {
           // API 완료 + 애니메이션 재생 완료 후 이동
           Future.delayed(Duration(milliseconds: (_animationDuration * 1000).toInt()))
-              .then((_) => context.go('/home'));
+              .then((_) {
+                final sessionAuthDetailInfo = ref.read(splashControllerProvider.notifier).sessionAuthDetailInfo;
+                if (sessionAuthDetailInfo?.chkMember == '0102' && sessionAuthDetailInfo?.pinNumYn == 'Y') {
+                  context.go('/home');
+                } else if (sessionAuthDetailInfo?.chkMember == '0102' && sessionAuthDetailInfo?.pinNumYn == 'N') {
+                  context.go('/login');
+                } else {
+                  final baseUrl = webBaseUrl['JOIN_MEMBER'] ?? ''; 
+                  // 예시 파라미터
+                  final params = {
+                    'P01': CacheHelper.getEncSeq(),
+                  };
+
+                  final url = Uri.parse(baseUrl).replace(queryParameters: params).toString();
+                  context.go('/webview', extra: url);
+                }
+              });
         },
         error: (e, _) {
           ScaffoldMessenger.of(context)

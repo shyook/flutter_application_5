@@ -38,7 +38,7 @@ final class AccountbookControllerProvider
 }
 
 String _$accountbookControllerHash() =>
-    r'b2aa3085dd64da59a85ece0c2999c6bd996fcd42';
+    r'b1ba68ecd78ca21903917f0a9fcf3162bae6519e';
 
 abstract class _$AccountbookController
     extends $AsyncNotifier<RootFinance<ServerTimeDetail>?> {

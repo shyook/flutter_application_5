@@ -33,7 +33,7 @@ final class SplashControllerProvider
   SplashController create() => SplashController();
 }
 
-String _$splashControllerHash() => r'f5e93dcd31992148bca9c5d8b95d2e859db18e4c';
+String _$splashControllerHash() => r'dccf4ff948007d6a7882116ec810711de269d265';
 
 abstract class _$SplashController extends $AsyncNotifier<void> {
   FutureOr<void> build();

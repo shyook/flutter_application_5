@@ -30,6 +30,15 @@ final dioProvider = Provider<Dio>((ref) {
   return dio;
 });
 
+final baseWebUrl = dotenv.get("DEV_URL_WEB");
+
+final webBaseUrl = <String, String>{
+  "JOIN_MEMBER": "$baseWebUrl/U001/03_02_03.do",
+  "B01": "https://url-B.com",
+  "C01": "https://url-C.com",
+  "DEFAULT": "https://fallback-url.com",
+};
+
 
 // // GET 요청
 // Future<void> getRequest() async {
