@@ -10,6 +10,7 @@ class SharedPreferencesHelper {
   static final String key_phone_number = "key_phone_number";
   static final String key_member_id = 'key_member_id';
   static final String key_user_check = 'key_user_check';
+  static final String key_skip_pin = 'key_skip_pin';
 
   static Future<bool> setData<T>({required String key, T? value}) async {
     if (value is int) {

@@ -41,7 +41,7 @@ final class LoginControllerProvider
   }
 }
 
-String _$loginControllerHash() => r'6def71ce02f74bf7e5d0dd4b01328b22284647a9';
+String _$loginControllerHash() => r'56ba0898e027be55752e1a9945a01f1ba5183547';
 
 abstract class _$LoginController extends $Notifier<PinState> {
   PinState build();

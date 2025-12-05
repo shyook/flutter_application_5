@@ -24,6 +24,8 @@ class PinState {
   final List<int> tempRegisterPin;
   final List<int> shuffledKeys;
   final bool loading;
+  final bool autoLogin;
+  final bool bioEnabled;
   final String? errorText;
 
   PinState({
@@ -32,6 +34,8 @@ class PinState {
     this.tempRegisterPin= const [],
     this.shuffledKeys = const [],
     this.loading = false,
+    this.autoLogin = false,
+    this.bioEnabled = false,
     this.errorText,
   });
 
@@ -41,6 +45,8 @@ class PinState {
     List<int>? tempRegisterPin,
     List<int>? shuffledKeys,
     bool? loading,
+    bool? autoLogin,
+    bool? bioEnabled,
     String? errorText,
   }) {
     return PinState(
@@ -49,6 +55,8 @@ class PinState {
       tempRegisterPin: tempRegisterPin ?? this.tempRegisterPin,
       shuffledKeys: shuffledKeys ?? this.shuffledKeys,
       loading: loading ?? this.loading,
+      autoLogin: autoLogin ?? this.autoLogin,
+      bioEnabled: bioEnabled ?? this.bioEnabled,
       errorText: errorText,
     );
   }
@@ -138,8 +146,10 @@ class LoginController extends Notifier<PinState> {
     final authResultCode = result?.finance?.body?.detail?.authResultCode ?? '';
     final authResult = CryptHelper.decryptByAes(CacheHelper.getEncKey(), authResultCode).trim();
 
-    if (authResult == 'Y') {
-      // 화면 이동 
+    if (authResult == 'PASS') {
+      state = state.copyWith(
+        mode: PinMode.success,
+      );
     } else {
       // 에러 팝업 
     }
@@ -198,6 +208,14 @@ class LoginController extends Notifier<PinState> {
       default:
         break;
     }
+  }
+
+  void toggleAutoLogin() {
+    state = state.copyWith(autoLogin: !state.autoLogin);
+  }
+
+  void toggleBioEnabled() {
+    state = state.copyWith(bioEnabled: !state.bioEnabled);
   }
 
   // FutureOr<RootFinance<PinRegisterDetail>?> registerPin(String pinCode, String type, String prevPinCode) async {

@@ -23,6 +23,16 @@ class AccountbookRepository {
     }
   }
 
+  Future<RootFinance<AccountBookReportDetail>?> fetchReport() async {
+    final response = await _apiProvider.fetchReport();
+    return response.data;
+  }
+
+  Future<RootFinance<AccountBookIncomeDetail>?> fetchTotalIncome(String yyyyMM) async {
+    final response = await _apiProvider.fetchTotalIncome(yyyyMM);
+    return response.data;
+  }
+
   // Future<void> createExample(FinanceSessionDetail example) async {
   //   try {
   //     await _apiProvider.postRequest('/example', example.toJson());

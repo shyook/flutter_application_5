@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_5/common/provider/dio_provider.dart';
 import 'package:flutter_application_5/common/utils/cache_helper.dart';
+import 'package:flutter_application_5/common/utils/shared_preferences_helper.dart';
 import 'package:flutter_application_5/presentation/splash/application/splash_controller.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -46,7 +47,12 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
               .then((_) {
                 final sessionAuthDetailInfo = ref.read(splashControllerProvider.notifier).sessionAuthDetailInfo;
                 if (sessionAuthDetailInfo?.chkMember == '0102' && sessionAuthDetailInfo?.pinNumYn == 'Y') {
-                  context.go('/home');
+                  final skip = SharedPreferencesHelper.getData(key: 'key_skip_pin');
+                  if (skip == 'Y') {
+                    context.go('/home');
+                  } else {
+                    context.go('/login');
+                  }
                 } else if (sessionAuthDetailInfo?.chkMember == '0102' && sessionAuthDetailInfo?.pinNumYn == 'N') {
                   context.go('/login');
                 } else {

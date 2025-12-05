@@ -69,6 +69,18 @@ class LoginScreen extends ConsumerWidget {
               ),
             ],
 
+            const SizedBox(height: 10),
+
+            // 자동로그인 / 생체인증
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                AutoLoginToggle(),
+                const SizedBox(width: 40),
+                BioLoginToggle(),
+              ],
+            ),
+
             const Spacer(),
 
             /// Keypad
@@ -78,7 +90,51 @@ class LoginScreen extends ConsumerWidget {
               shuffledKeys: state.shuffledKeys,
             ),
 
-            const SizedBox(height: 40),
+            const SizedBox(height: 20),
+
+            TextButton(
+              onPressed: () {},
+              child: const Text(
+                "비밀번호를 잊으셨나요?",
+                style: TextStyle(color: Colors.white70, fontSize: 14, decoration: TextDecoration.underline),
+              ),
+            ),
+
+            const SizedBox(height: 20),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildBioButton(PinState state, VoidCallback onBioAuth) {
+    // PIN 등록 모드에서는 숨김
+    if (state.mode != PinMode.verify) {
+      return const SizedBox.shrink();
+    }
+
+    // 생체 인증이 가능한 경우에만 보여줌
+    // if (!state.bioEnabled) {
+    //   return const SizedBox.shrink();
+    // }
+
+    return GestureDetector(
+      onTap: onBioAuth,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.white.withOpacity(0.6)),
+          borderRadius: BorderRadius.circular(30),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: const [
+            Icon(Icons.fingerprint, color: Colors.white, size: 20),
+            SizedBox(width: 6),
+            Text(
+              "생체 인증",
+              style: TextStyle(color: Colors.white, fontSize: 16),
+            ),
           ],
         ),
       ),
@@ -86,56 +142,142 @@ class LoginScreen extends ConsumerWidget {
   }
 
   Widget _keypad({
-  required Function(int) onNumber,
-  required VoidCallback onDelete,
-  required List<int> shuffledKeys,
-}) {
-  final items = [
-    ...shuffledKeys.sublist(0, 9), // 1~9
-    -1,                            // 빈칸
-    shuffledKeys[9],               // 0
-    -2,                            // 삭제
-  ];
+    required Function(int) onNumber,
+    required VoidCallback onDelete,
+    required List<int> shuffledKeys,
+  }) {
+    final items = [
+      ...shuffledKeys.sublist(0, 9), // 1~9
+      -1,                            // 빈칸
+      shuffledKeys[9],               // 0
+      -2,                            // 삭제
+    ];
 
-  return SizedBox(
-    height: 350, // 필요 시 조정 가능 (모든 해상도에서 동일)
-    child: GridView.builder(
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,       // 항상 3열 고정
-        childAspectRatio: 1.1,   // 버튼 모양 비율 (필요 시 조정)
-      ),
-      itemCount: 12,
-      itemBuilder: (context, index) {
-        final num = items[index];
+    return SizedBox(
+      height: 350, // 필요 시 조정 가능 (모든 해상도에서 동일)
+      child: GridView.builder(
+        physics: const NeverScrollableScrollPhysics(),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3,       // 항상 3열 고정
+          childAspectRatio: 1.6,   // 버튼 모양 비율 (필요 시 조정)
+        ),
+        itemCount: 12,
+        itemBuilder: (context, index) {
+          final num = items[index];
 
-        if (num == -1) {
-          return const SizedBox.shrink(); // 빈칸
-        } else if (num == -2) {
+          if (num == -1) {
+            return const SizedBox.shrink(); // 빈칸
+          } else if (num == -2) {
+            return Center(
+              child: IconButton(
+                icon: const Icon(Icons.backspace, color: Colors.white),
+                iconSize: 32,
+                onPressed: onDelete,
+              ),
+            );
+          }
+
           return Center(
-            child: IconButton(
-              icon: const Icon(Icons.backspace, color: Colors.white),
-              iconSize: 32,
-              onPressed: onDelete,
-            ),
-          );
-        }
-
-        return Center(
-          child: TextButton(
-            onPressed: () => onNumber(num),
-            child: Text(
-              "$num",
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 32,
+            child: TextButton(
+              onPressed: () => onNumber(num),
+              child: Text(
+                "$num",
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 32,
+                ),
               ),
             ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class AutoLoginToggle extends ConsumerWidget {
+  const AutoLoginToggle({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(loginControllerProvider);
+    final controller = ref.read(loginControllerProvider.notifier);
+
+    return GestureDetector(
+      onTap: controller.toggleAutoLogin,
+      child: Row(
+        children: [
+          Container(
+            width: 28,
+            height: 28,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: Colors.white.withOpacity(0.6),
+                width: 2,
+              ),
+              color: state.autoLogin
+                  ? Colors.white.withOpacity(0.2)
+                  : Colors.transparent,
+            ),
+            child: state.autoLogin
+                ? const Icon(Icons.check, color: Colors.white, size: 13)
+                : null,
           ),
-        );
-      },
-    ),
-  );
+          const SizedBox(width: 8),
+          const Text(
+            "자동로그인",
+            style: TextStyle(color: Colors.white, fontSize: 15),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class BioLoginToggle extends ConsumerWidget {
+  const BioLoginToggle({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(loginControllerProvider);
+    final controller = ref.read(loginControllerProvider.notifier);
+
+    // PIN 등록 모드면 숨김
+    if (state.mode == PinMode.register) {
+      return const SizedBox.shrink();
+    }
+
+    return GestureDetector(
+      onTap: controller.toggleBioEnabled,
+      child: Row(
+        children: [
+          Container(
+            width: 28,
+            height: 28,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: Colors.white.withOpacity(0.6),
+                width: 2,
+              ),
+              color: state.bioEnabled
+                  ? Colors.white.withOpacity(0.2)
+                  : Colors.transparent,
+            ),
+            child: state.bioEnabled
+                ? const Icon(Icons.check, color: Colors.white, size: 13)
+                : null,
+          ),
+          const SizedBox(width: 8),
+          const Text(
+            "생체인증",
+            style: TextStyle(color: Colors.white, fontSize: 15),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 //   Widget _keypad({
@@ -176,7 +318,7 @@ class LoginScreen extends ConsumerWidget {
 //     }).toList(),
 //   );
 //   }
-}
+// }
 
 
 // class LoginScreen extends ConsumerStatefulWidget {
