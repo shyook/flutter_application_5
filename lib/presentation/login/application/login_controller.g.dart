@@ -13,8 +13,7 @@ part of 'login_controller.dart';
 const loginControllerProvider = LoginControllerProvider._();
 
 final class LoginControllerProvider
-    extends
-        $AsyncNotifierProvider<LoginController, RootFinance<PinStatusDetail>?> {
+    extends $NotifierProvider<LoginController, PinState> {
   const LoginControllerProvider._()
     : super(
         from: null,
@@ -32,31 +31,30 @@ final class LoginControllerProvider
   @$internal
   @override
   LoginController create() => LoginController();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(PinState value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<PinState>(value),
+    );
+  }
 }
 
-String _$loginControllerHash() => r'286c88376d44d4a111dfcc109b5a6cb0dd4b4703';
+String _$loginControllerHash() => r'6def71ce02f74bf7e5d0dd4b01328b22284647a9';
 
-abstract class _$LoginController
-    extends $AsyncNotifier<RootFinance<PinStatusDetail>?> {
-  FutureOr<RootFinance<PinStatusDetail>?> build();
+abstract class _$LoginController extends $Notifier<PinState> {
+  PinState build();
   @$mustCallSuper
   @override
   void runBuild() {
     final created = build();
-    final ref =
-        this.ref
-            as $Ref<
-              AsyncValue<RootFinance<PinStatusDetail>?>,
-              RootFinance<PinStatusDetail>?
-            >;
+    final ref = this.ref as $Ref<PinState, PinState>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<
-                AsyncValue<RootFinance<PinStatusDetail>?>,
-                RootFinance<PinStatusDetail>?
-              >,
-              AsyncValue<RootFinance<PinStatusDetail>?>,
+              AnyNotifier<PinState, PinState>,
+              PinState,
               Object?,
               Object?
             >;

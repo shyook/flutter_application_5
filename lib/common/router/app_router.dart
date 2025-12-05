@@ -18,7 +18,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       /// Login Pin
       GoRoute(
         path: '/login',
-        builder: (context, state) => const LoginScreen(loginType: ''),
+        builder: (context, state) => const LoginScreen(),
       ),
       /// 🔥 URL extra 로 받는 WebView 화면
       GoRoute(
